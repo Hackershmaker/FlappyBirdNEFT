@@ -8,6 +8,15 @@ import operator  # Importing the operator module for sorting
 
 class Population:
     def __init__(self, size):
+        """
+        Initialize a Population object.
+
+        Args:
+            size (int): The size of the population.
+
+        Returns:
+            None
+        """
         self.players = []  # List to store player objects
         self.generation = 1  # Current generation number
         self.species = []  # List to store species
@@ -16,15 +25,33 @@ class Population:
             self.players.append(player.Player())  # Creating player objects and adding them to the population
 
     def update_live_players(self):
+        """
+        Update the live players in the population.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         # Update the live players in the population
         for p in self.players:
             if p.alive:
-                p.look()  # Perform player's look behavior
+                p.collect_data()  # Perform player's collect_data behavior
                 p.think()  # Perform player's think behavior
                 p.draw(config.window)  # Draw player on the window
                 p.update(config.ground)  # Update player's position based on the ground
 
     def natural_selection(self):
+        """
+        Perform the natural selection process.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         # Perform natural selection process
         print('SPECIATE')
         self.speciate()  # Separate players into species
@@ -45,6 +72,15 @@ class Population:
         self.next_gen()  # Generate children for the next generation
 
     def speciate(self):
+        """
+        Separate players into species based on similarity.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         # Separate players into species based on similarity
         for s in self.species:
             s.players = []
@@ -60,6 +96,15 @@ class Population:
                 self.species.append(species.Species(p))  # Create a new species for the player
 
     def calculate_fitness(self):
+        """
+        Calculate fitness for each player and species.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         # Calculate fitness for each player and species
         for p in self.players:
             p.calculate_fitness()  # Calculate fitness for individual player
@@ -67,6 +112,15 @@ class Population:
             s.calculate_average_fitness()  # Calculate average fitness for each species
 
     def kill_extinct_species(self):
+        """
+        Remove species with no players.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         # Remove species with no players
         species_bin = []
         for s in self.species:
@@ -76,6 +130,15 @@ class Population:
             self.species.remove(s)
 
     def kill_stale_species(self):
+        """
+        Remove species that have not improved for a long time.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         # Remove species that have not improved for a long time
         player_bin = []
         species_bin = []
@@ -93,6 +156,15 @@ class Population:
             self.species.remove(s)
 
     def sort_species_by_fitness(self):
+        """
+        Sort species by fitness in descending order.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         # Sort species by fitness in descending order
         for s in self.species:
             s.sort_players_by_fitness()
@@ -100,6 +172,15 @@ class Population:
         self.species.sort(key=operator.attrgetter('benchmark_fitness'), reverse=True)
 
     def next_gen(self):
+        """
+        Generate the next generation of players.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         children = []
 
         # Clone champion of each species and add to children
@@ -124,6 +205,15 @@ class Population:
 
     # Check if all players are dead
     def extinct(self):
+        """
+        Check if all players in the population are dead.
+
+        Args:
+            None
+
+        Returns:
+            bool: True if all players are dead, False otherwise.
+        """
         extinct = True
         for p in self.players:
             if p.alive:
@@ -131,6 +221,15 @@ class Population:
         return extinct
     
     def get_stats(self):
+        """
+        Get statistics of the lifespan for the population.
+
+        Args:
+            None
+
+        Returns:
+            dict: A dictionary containing statistics of the lifespan column.
+        """
         # Create a DataFrame from the player objects
         df = pd.DataFrame([vars(player) for player in self.players])
         # Calculate statistics on the lifespan column
